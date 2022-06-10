@@ -7,14 +7,15 @@
 
 module.exports = {
   transformer: {
-    getTransformOptions: async () => ({
+    getTransformOptions: async() => ({
       transform: {
         experimentalImportSupport: false,
-        inlineRequires: true,
-      },
-    }),
+        inlineRequires:            true
+      }
+    })
   },
+  // see https://github.com/react-navigation/react-navigation/issues/8855
   resolver: {
-    sourceExts: ['jsx','js']
+    sourceExts: [ 'jsx', 'js', 'ts', 'tsx' ]
   }
 };
