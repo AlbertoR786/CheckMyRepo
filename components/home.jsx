@@ -21,7 +21,13 @@ const checkUser = (user) => {
     return false;
   }
 
-  return true;
+  // From github: Username may only contain alphanumeric characters or single
+  // hyphens, and cannot begin or end with a hyphen.
+  // gently offered by https://github.com/shinnn/github-username-regex
+
+  const gitUserRegEX = /^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i;
+
+  return gitUserRegEX.test(user);
 };
 
 const checkRepo = (repo) => {
@@ -33,7 +39,11 @@ const checkRepo = (repo) => {
     return false;
   }
 
-  return true;
+  // github repo names must be shorter than 100 chars and contain only
+  // alphanumeric and hypens
+  const gitRepoRegEX = /^[A-Za-z0-9_.-]{0,38}$/i;
+
+  return gitRepoRegEX.test(repo);
 };
 
 const getErrorMessage = (type) => {
@@ -82,6 +92,7 @@ const Home = ({ navigation, route }) => {
           setRepo(data);
           setDataState();
           break;
+
         case 'user':
           setUser(data);
           setDataState();
@@ -139,9 +150,9 @@ const Home = ({ navigation, route }) => {
           return;
         }
 
-        const dataOk = checkUser(user) && checkRepo(repo);
-
+        const dataOk     = checkUser(user) && checkRepo(repo);
         const _dataState = dataOk ? DATA_STATE.READY : DATA_STATE.DATA_ERROR;
+
         setDataState(_dataState);
       } else {
         setDataState(DATA_STATE.INTERNET_ERROR);
