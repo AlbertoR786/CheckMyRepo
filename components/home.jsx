@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Text, View, TouchableOpacity } from 'react-native';
+import NetInfo from '@react-native-community/netinfo';
 import Style from '../style/main';
 
 const DATA_STATE = {
@@ -46,6 +47,16 @@ const getErrorMessage = (type) => {
             <Text>or your</Text>
             <Text style={Style.boldText}> repository </Text>
             <Text>name</Text>
+          </Text>
+        </View>
+      );
+
+    case DATA_STATE.INTERNET_ERROR:
+      return (
+        <View style={Style.flexRow}>
+          <Text style={Style.defaultText}>
+            <Text>Check your</Text>
+            <Text style={Style.boldText}> internet connection</Text>
           </Text>
         </View>
       );
@@ -121,15 +132,21 @@ const Home = ({ navigation, route }) => {
   };
 
   const onClick = useCallback(() => {
-    if (dataState === DATA_STATE.READY) {
-      console.log('sending');
-      return;
-    }
+    NetInfo.fetch().then(({ isInternetReachable }) => {
+      if (isInternetReachable) {
+        if (dataState === DATA_STATE.READY) {
+          console.log('sending');
+          return;
+        }
 
-    const dataOk = checkUser(user) && checkRepo(repo);
+        const dataOk = checkUser(user) && checkRepo(repo);
 
-    const _dataState = dataOk ? DATA_STATE.READY : DATA_STATE.DATA_ERROR;
-    setDataState(_dataState);
+        const _dataState = dataOk ? DATA_STATE.READY : DATA_STATE.DATA_ERROR;
+        setDataState(_dataState);
+      } else {
+        setDataState(DATA_STATE.INTERNET_ERROR);
+      }
+    }).catch(() => setDataState(DATA_STATE.INTERNET_ERROR));
   }, [ dataState, user, repo ]);
 
   const repoText = repo.length > 0 ? repo : 'Repo';
