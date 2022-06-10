@@ -1,7 +1,9 @@
 export const COLORS = {
   WHITE:      '#FFFFFF',
   BLACK:      '#000000',
-  LIGHT_GREY: '#989898'
+  LIGHT_GREY: '#989898',
+  ERROR:      '#FFACAC',
+  SEND:       '#CAFFDA'
 };
 
 export const FONT_SIZES = {

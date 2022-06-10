@@ -7,6 +7,12 @@ export default StyleSheet.create({
     padding:         20,
     backgroundColor: COLORS.WHITE
   },
+  error: {
+    backgroundColor: COLORS.ERROR
+  },
+  ready: {
+    backgroundColor: COLORS.SEND
+  },
   flexRow: {
     flexDirection: 'row'
   },
@@ -29,6 +35,10 @@ export default StyleSheet.create({
   defaultText: {
     fontSize:   FONT_SIZES.MEDIUM,
     fontFamily: FONT_TYPES.REGULAR
+  },
+  boldText: {
+    fontSize:   FONT_SIZES.MEDIUM,
+    fontFamily: FONT_TYPES.BOLD
   },
   submitButton: {
     position: 'absolute',

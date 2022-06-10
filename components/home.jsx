@@ -3,9 +3,63 @@ import PropTypes from 'prop-types';
 import { Text, View, TouchableOpacity } from 'react-native';
 import Style from '../style/main';
 
+const DATA_STATE = {
+  DATA_ERROR:     'DATA_ERROR',
+  INTERNET_ERROR: 'INTERNET_ERROR',
+  READY:          'READY'
+};
+
+const nullString = (string) => (string === undefined || string === null);
+
+const checkUser = (user) => {
+  if (nullString(user)) {
+    return false;
+  }
+
+  if (user.length === 0) {
+    return false;
+  }
+
+  return true;
+};
+
+const checkRepo = (repo) => {
+  if (nullString(repo)) {
+    return false;
+  }
+
+  if (repo.length === 0) {
+    return false;
+  }
+
+  return true;
+};
+
+const getErrorMessage = (type) => {
+  switch (type) {
+    case DATA_STATE.DATA_ERROR:
+      return (
+        <View style={Style.flexRow}>
+          <Text style={Style.defaultText}>
+            <Text>Check your</Text>
+            <Text style={Style.boldText}> username </Text>
+            <Text>or your</Text>
+            <Text style={Style.boldText}> repository </Text>
+            <Text>name</Text>
+          </Text>
+        </View>
+      );
+
+    default:
+      return null;
+  }
+};
+
 const Home = ({ navigation, route }) => {
   const [ repo, setRepo ] = useState('');
   const [ user, setUser ] = useState('');
+
+  const [ dataState, setDataState ] = useState();
 
   const params = route.params;
 
@@ -15,11 +69,14 @@ const Home = ({ navigation, route }) => {
       switch (type) {
         case 'repo':
           setRepo(data);
+          setDataState();
           break;
         case 'user':
           setUser(data);
+          setDataState();
           break;
-            // no default
+
+        // no default
       }
     }
   }, [ params ]);
@@ -48,11 +105,44 @@ const Home = ({ navigation, route }) => {
     });
   }, [ navigation ]);
 
+  const getLabel = () => {
+    const userOk = checkUser(user);
+    const repoOk = checkRepo(repo);
+
+    if (dataState === undefined || dataState === DATA_STATE.DATA_ERROR) {
+      return 'CHECK';
+    }
+
+    if (userOk && repoOk) {
+      return 'SEND';
+    }
+
+    return 'CHECK';
+  };
+
+  const onClick = useCallback(() => {
+    if (dataState === DATA_STATE.READY) {
+      console.log('sending');
+      return;
+    }
+
+    const dataOk = checkUser(user) && checkRepo(repo);
+
+    const _dataState = dataOk ? DATA_STATE.READY : DATA_STATE.DATA_ERROR;
+    setDataState(_dataState);
+  }, [ dataState, user, repo ]);
+
   const repoText = repo.length > 0 ? repo : 'Repo';
   const userText = user.length > 0 ? user : 'User';
 
+  const isError    = dataState !== undefined;
+  const canSend    = dataState === DATA_STATE.READY;
+  const sendStyle  = canSend ? Style.ready : {};
+  const errorStyle = isError ? Style.error : {};
+  const mainStyle  = { ...Style.container, ...errorStyle, ...sendStyle };
+
   return (
-    <View style={Style.container}>
+    <View style={mainStyle}>
       <Text style={Style.title}>
         Set the repository address
       </Text>
@@ -71,11 +161,17 @@ const Home = ({ navigation, route }) => {
           <Text style={Style.dataText}>{repoText}</Text>
         </TouchableOpacity>
       </View>
+      <View style={Style.flexRow}>
+        {getErrorMessage(dataState)}
+      </View>
 
       <TouchableOpacity style={Style.submitButton}
-        onPress={console.log}>
-        <Text style={Style.submitText}>Done</Text>
+        onPress={onClick}>
+        <Text style={Style.submitText}>
+          {getLabel()}
+        </Text>
       </TouchableOpacity>
+
     </View>
   );
 };
