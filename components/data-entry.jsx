@@ -4,9 +4,9 @@ import { Text, View, TouchableOpacity, TextInput } from 'react-native';
 import Style from '../style/data-entry';
 
 const DataEntry = ({ navigation, route }) => {
-  const [ user, setUser ] = useState('');
+  const { type, placeholder, current } = route.params;
 
-  const { type, placeholder } = route.params;
+  const [ user, setUser ] = useState(current);
 
   const toHome = useCallback(() => {
     navigation.navigate({
