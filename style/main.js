@@ -7,6 +7,13 @@ export default StyleSheet.create({
     padding:         20,
     backgroundColor: COLORS.WHITE
   },
+  centeredContainer: {
+    flex:            1,
+    alignItems:      'center',
+    justifyContent:  'center',
+    padding:         20,
+    backgroundColor: COLORS.WHITE
+  },
   error: {
     backgroundColor: COLORS.ERROR
   },
@@ -50,5 +57,12 @@ export default StyleSheet.create({
     fontSize:      FONT_SIZES.BIG,
     fontFamily:    FONT_TYPES.BOLD,
     textTransform: 'uppercase'
+  },
+  sentText: {
+    fontFamily: FONT_TYPES.BOLD,
+    fontSize:   FONT_SIZES.HUGE,
+    color:      COLORS.BLACK,
+    textAlign:  'center'
+
   }
 });
