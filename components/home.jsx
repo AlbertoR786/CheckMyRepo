@@ -4,7 +4,8 @@ import { Text, View, TouchableOpacity } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import Style from '../style/main';
 
-const SEND_URL = 'https://pushmore.io/webhook/';
+// replace this with sops or git-crypt!
+const SEND_URL = 'https://pushmore.io/webhook/d3Gm4aEPCuhAUjfbECLLdW41';
 const SENDER   = 'Alberto Ronchi <alberto.ronchi786@gmail.com>';
 
 const DATA_STATE = {
